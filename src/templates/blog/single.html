@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>{% if posts.meta_title %} {{posts.meta_title}} {else} {{posts.title}} {%endif%}</title>
+<meta name="description" content={% if posts.meta_description %} {{posts.meta_description}} {else} {{posts.content| truncatechars:200}} {%endif%} />
+{% endblock head%}
+{% block content%}
+<div class="container my-3">
+    <div class="row py-3">
+        <div class="col-md-9">
+            <h1>{{posts.title}}</h1>
+            <!--BreadCrumb-->       
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a class="text-decoration-none text-danger" href="{% url 'home' %}">Home</a></li>
+                  <li class="breadcrumb-item"><a class="text-decoration-none text-success" href="">{{posts.category.title }}</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">{{posts.title}}</li>
+                </ol>
+              </nav>
+              <hr>
+              
+              <div>
+                <!-- Begin Featured Image -->
+            <img class="featured-image img-fluid" src="{{post.featured_image.url}}" alt="">
+			<!-- End Featured Image -->
+            {{posts.content|safe}}
+
+
+              </div>
+              <div class="my-3"><strong>Last Update : </strong>{{posts.updated}}</div>
+
+        </div>
+        <div class="col-md-3">Side Bar</div>
+    </div>
+    {% load social_share %}
+    <div>
+      <script src="https://kit.fontawesome.com/eb5100ca45.js" crossorigin="anonymous"></script>
+      
+      <br>
+       <div><span style="font-size:15px;float:left;margin-left:10px;"class="fa-2x nav-item"> {% post_to_linkedin object_or_url %}</span></div>
+      
+        <span style="color:#0088cc; float:left;margin-left:10px;" class="nav-item"> {% post_to_telegram "New Post: {{detail.title}}" object_or_url '<i class="fa-brands fa-instagram fa-2x"></i>' %}</span>
+      
+       <span style="float:left;margin-left:10px;" class="nav-item">{% post_to_facebook object_or_url '<i class="fab fa-facebook fa-2x"></i>' %}</span>
+      
+       <span style="float:left;margin-left:10px;" class="nav-item"> {% post_to_twitter "New Post: {{detail.title}}. Check it out!" object_or_url '<i class="fa-brands fa-twitter fa-2x"></i>' %}</span>
+      <span style="float:left;margin-left:10px;" class="nav-item"> {% post_to_telegram "New Post: {{detail.title}}. Check it out!" object_or_url '<i class="fa-brands fa-telegram fa-2x"></i>' %}</span>
+      
+      <span style="float:left;margin-left:10px;" class="nav-item"> {% post_to_reddit "New Post: {{detail.title}}. Check it out!" object_or_url '<i class="fa-brands fa-reddit fa-2x"></i>' %}</span>
+      
+       <span style="float:left;margin-left:10px;" class="nav-item">{% post_to_whatsapp object_or_url '<i class="fa-brands fa-whatsapp fa-2x"></i>' %}</span>
+      
+       <span style="float:left;margin-left:10px;" class="nav-item">{% post_to_gplus object_or_url '<i class="fa fa-google-plus-official fa-2x" aria-hidden="true"></i>' %}</span>
+      
+       <br><br><br>
+       <div>
+        <!-- comments -->
+        <h2>{{ comments.count }} comments</h2>
+
+        {% for comment in comments %}
+        <div class="comments" style="padding: 10px;">
+          <p class="font-weight-bold">
+            {{ comment.name }}
+            <span class=" text-muted font-weight-normal">
+              {{ comment.created_on }}
+            </span>
+          </p>
+          {{ comment.body | linebreaks }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-md-8 card mb-4  mt-3 ">
+      <div class="card-body">
+        {% if new_comment %}
+        <div class="alert alert-success" role="alert">
+          Your comment is awaiting moderation
+        </div>
+        {% else %}
+        <h3>Leave a comment</h3>
+        <form method="post" style="margin-top: 1.3em;">
+          {{ comment_form.as_p }}
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+       </div>
+      </div>
+      
+</div>
+{% endblock content%}
+
+
+
+
